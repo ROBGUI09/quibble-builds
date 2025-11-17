@@ -1,5 +1,5 @@
 name: build amd64
-on: [push]
+on: [workflow_dispatch]
 jobs:
   amd64:
     runs-on: ubuntu-rolling
