@@ -2,7 +2,7 @@ name: build amd64
 on: [workflow_dispatch]
 jobs:
   amd64:
-    runs-on: ubuntu-rolling
+    runs-on: ubuntu-24.04
     steps:
       - run: apt-get update
       - run: apt-get install -y git cmake nodejs g++-mingw-w64-x86-64 gnu-efi
