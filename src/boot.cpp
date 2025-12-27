@@ -324,7 +324,7 @@ static EFI_STATUS initialize_loader_block(EFI_BOOT_SERVICES* bs, loader_store* s
         loader_block.KernelStackSize = KERNEL_STACK_SIZE * EFI_PAGE_SIZE;
 
     if constexpr (requires { T::OsLoaderSecurityVersion; }) {
-        if (build >= WIN10_BUILD_2004 && revision >= 5854)
+        if (build >= WIN10_BUILD_2004)
             loader_block.OsLoaderSecurityVersion = 2;
         else if (build >= WIN10_BUILD_1511)
             loader_block.OsLoaderSecurityVersion = 1;
