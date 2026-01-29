@@ -262,7 +262,7 @@ static std::optional<loader_block_variant> find_loader_block(loader_store* store
 template<typename T>
 static EFI_STATUS initialize_loader_block(EFI_BOOT_SERVICES* bs, loader_store* store, T& loader_block, char* options, char* path,
                                           char* arc_name, void** va, LIST_ENTRY* mappings, LIST_ENTRY* drivers, EFI_HANDLE image_handle,
-                                          uint16_t version, uint16_t build, LIST_ENTRY* core_drivers) {
+                                          uint16_t version, uint16_t build, LIST_ENTRY* core_drivers, uint16_t revision) {
     EFI_STATUS Status;
     char* str;
     unsigned int pathlen;
@@ -324,7 +324,7 @@ static EFI_STATUS initialize_loader_block(EFI_BOOT_SERVICES* bs, loader_store* s
         loader_block.KernelStackSize = KERNEL_STACK_SIZE * EFI_PAGE_SIZE;
 
     if constexpr (requires { T::OsLoaderSecurityVersion; }) {
-        if (build >= WIN10_BUILD_2004)
+        if (build >= WIN10_BUILD_2004 && revision >= 5854)
             loader_block.OsLoaderSecurityVersion = 2;
         else if (build >= WIN10_BUILD_1511)
             loader_block.OsLoaderSecurityVersion = 1;
@@ -3828,7 +3828,7 @@ static EFI_STATUS boot(EFI_HANDLE image_handle, EFI_BOOT_SERVICES* bs, EFI_FILE_
 
     std::visit([&](auto&& b) {
         Status = initialize_loader_block(bs, store, *b, options, path, arc_name, &va, &mappings, &drivers, image_handle,
-                                         version, build, &core_drivers);
+                                         version, build, &core_drivers, revision);
     }, loader_block);
 
     if (EFI_ERROR(Status)) {
